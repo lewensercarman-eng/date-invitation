@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A Little Invitation ❤️</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: "Georgia", serif;
+        background: #090909;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* =========================
+       BACKGROUND
+    ========================= */
+
+    .background {
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(150, 30, 60, 0.20), transparent 30%),
+            radial-gradient(circle at 80% 80%, rgba(180, 40, 80, 0.12), transparent 30%),
+            #090909;
+        z-index: -2;
+    }
+
+    .noise {
+        position: fixed;
+        inset: 0;
+        opacity: 0.035;
+        z-index: -1;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* =========================
+       GENERAL
+    ========================= */
+
+    .screen {
+        min-height: 100vh;
+        width: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .screen.active {
+        display: flex;
+        animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .content {
+        width: 100%;
+        max-width: 650px;
+    }
+
+    .eyebrow {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        opacity: 0.55;
+        margin-bottom: 25px;
+    }
+
+    h1 {
+        font-size: clamp(42px, 9vw, 85px);
+        font-weight: 400;
+        line-height: 0.95;
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        font-size: clamp(30px, 7vw, 55px);
+        font-weight: 400;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.78);
+    }
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    .btn {
+        border: 1px solid rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.06);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-3px);
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .primary {
+        background: #a83255;
+        border-color: #a83255;
+    }
+
+    .primary:hover {
+        background: #c23e65;
+        border-color: #c23e65;
+    }
+
+    /* =========================
+       ENVELOPE
+    ========================= */
+
+    .envelope-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .envelope {
+        width: 260px;
+        height: 180px;
+        position: relative;
+        margin-bottom: 35px;
+        cursor: pointer;
+        perspective: 1000px;
+    }
+
+    .envelope-body {
+        position: absolute;
+        inset: 0;
+        background: #a83255;
+        border-radius: 8px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    .envelope-body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(145deg, transparent 49%, rgba(0,0,0,0.15) 50%);
+        border-radius: 8px;
+    }
+
+    .flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-left: 130px solid transparent;
+        border-right: 130px solid transparent;
+        border-top: 95px solid #c23e65;
+        transform-origin: top center;
+        transition: transform 0.8s ease;
+        z-index: 3;
+    }
+
+    .envelope.open .flap {
+        transform: rotateX(180deg);
+    }
+
+    .letter {
+        position: absolute;
+        width: 220px;
+        height: 145px;
+        background: #f8f3ed;
+        color: #222;
+        left: 20px;
+        bottom: 10px;
+        border-radius: 5px;
+        z-index: 2;
+        transition: 0.8s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .envelope.open .letter {
+        transform: translateY(-90px);
+    }
+
+    .heart {
+        font-size: 35px;
+    }
+
+    /* =========================
+       DATE DETAILS
+    ========================= */
+
+    .date-card {
+        margin: 35px auto;
+        padding: 30px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        max-width: 500px;
+    }
+
+    .date-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-align: left;
+        padding: 17px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .date-row:last-child {
+        border-bottom: none;
+    }
+
+    .date-icon {
+        font-size: 25px;
+        width: 35px;
+        text-align: center;
+    }
+
+    .date-label {
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        opacity: 0.45;
+        margin-bottom: 4px;
+    }
+
+    .date-value {
+        font-size: 17px;
+    }
+
+    /* =========================
+       QUESTION
+    ========================= */
+
+    .question {
+        margin-top: 40px;
+    }
+
+    .buttons {
+        margin-top: 35px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        position: relative;
+        min-height: 60px;
+    }
+
+    #noBtn {
+        position: relative;
+    }
+
+    /* =========================
+       CONFIRMATION
+    ========================= */
+
+    .confirmation {
+        position: relative;
+    }
+
+    .big-heart {
+        font-size: 90px;
+        animation: heartbeat 1.2s infinite;
+        margin-bottom: 25px;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+    }
+
+    .confirmed-box {
+        margin: 30px auto;
+        padding: 25px;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 20px;
+        background: rgba(255,255,255,0.04);
+        max-width: 450px;
+    }
+
+    .confirmed-box strong {
+        font-family: Arial, sans-serif;
+        letter-spacing: 2px;
+        font-size: 11px;
+        opacity: 0.5;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    /* =========================
+       FLOATING HEARTS
+    ========================= */
+
+    .floating-heart {
+        position: fixed;
+        bottom: -50px;
+        font-size: 18px;
+        pointer-events: none;
+        animation: floatUp linear forwards;
+        z-index: 10;
+    }
+
+    @keyframes floatUp {
+        from {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 0.8;
+        }
+
+        90% {
+            opacity: 0.6;
+        }
+
+        to {
+            transform: translateY(-110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* =========================
+       MUSIC
+    ========================= */
+
+    .music-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.07);
+        color: white;
+        cursor: pointer;
+        z-index: 100;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+        .screen {
+            padding: 25px 18px;
+        }
+
+        .date-card {
+            padding: 20px;
+        }
+
+        .envelope {
+            transform: scale(0.9);
+        }
+
+        p {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+<div class="noise"></div>
+
+<!-- =========================================
+     SCREEN 1 - OPENING
+========================================= -->
+
+<section id="screen1" class="screen active">
+
+    <div class="content">
+
+        <div class="eyebrow">
+            A little something for you
+        </div>
+
+        <div class="envelope-wrapper">
+
+            <div class="envelope" id="envelope">
+
+                <div class="letter">
+                    <span class="heart">♥</span>
+                </div>
+
+                <div class="envelope-body"></div>
+
+                <div class="flap"></div>
+
+            </div>
+
+            <h2>You've got mail.</h2>
+
+            <p style="margin-bottom: 25px;">
+                And no, it's not a bill.
+            </p>
+
+            <button class="btn primary" onclick="openInvitation()">
+                OPEN INVITATION
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SCREEN 2 - MESSAGE
+========================================= -->
+
+<section id="screen2" class="screen">
+
+    <div class="content">
+
+        <div class="eyebrow">
+            Official invitation
+        </div>
+
+        <h1>
+            A Date<br>
+            With Me.
+        </h1>
+
+        <p id="message">
+        </p>
+
+        <br>
+
+        <button class="btn primary" onclick="showScreen(3)">
+            CONTINUE →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SCREEN 3 - DATE DETAILS
+========================================= -->
+
+<section id="screen3" class="screen">
+
+    <div class="content">
+
+        <div class="eyebrow">
+            The important stuff
+        </div>
+
+        <h2>
+            Our little plan
+        </h2>
+
+        <p>
+            Here are the details. Try not to cancel.
+        </p>
+
+        <div class="date-card">
+
+            <div class="date-row">
+
+                <div class="date-icon">
+                    📅
+                </div>
+
+                <div>
+                    <div class="date-label">
+                        Date
+                    </div>
+
+                    <div class="date-value" id="dateText">
+                        September 27, 2026
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="date-row">
+
+                <div class="date-icon">
+                    🕐
+                </div>
+
+                <div>
+                    <div class="date-label">
+                        Time
+                    </div>
+
+                    <div class="date-value" id="timeText">
+                        6:00 PM
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="date-row">
+
+                <div class="date-icon">
+                    📍
+                </div>
+
+                <div>
+                    <div class="date-label">
+                        Location
+                    </div>
+
+                    <div class="date-value" id="locationText">
+                        Our Secret Destination
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="date-row">
+
+                <div class="date-icon">
+                    👗
+                </div>
+
+                <div>
+                    <div class="date-label">
+                        Dress code
+                    </div>
+
+                    <div class="date-value" id="dressText">
+                        Whatever makes you feel pretty.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="btn primary" onclick="showScreen(4)">
+            THERE'S MORE →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SCREEN 4 - QUESTION
+========================================= -->
+
+<section id="screen4" class="screen">
+
+    <div class="content">
+
+        <div class="eyebrow">
+            One final question
+        </div>
+
+        <h1>
+            Will you<br>
+            go with me?
+        </h1>
+
+        <p>
+            I promise good food, good conversation,<br>
+            and at least one terrible joke.
+        </p>
+
+        <div class="question">
+
+            <div class="buttons">
+
+                <button
+                    class="btn primary"
+                    onclick="acceptDate()">
+                    YES, ABSOLUTELY ❤️
+                </button>
+
+                <button
+                    class="btn"
+                    id="noBtn"
+                    onclick="noClicked()">
+                    LET ME THINK
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SCREEN 5 - CONFIRMATION
+========================================= -->
+
+<section id="screen5" class="screen">
+
+    <div class="content confirmation">
+
+        <div class="big-heart">
+            ❤️
+        </div>
+
+        <div class="eyebrow">
+            It's official
+        </div>
+
+        <h1>
+            Date<br>
+            Confirmed.
+        </h1>
+
+        <p>
+            Good choice.
+        </p>
+
+        <div class="confirmed-box">
+
+            <strong>
+                SEE YOU THERE
+            </strong>
+
+            <div id="confirmedDate">
+                September 27, 2026
+            </div>
+
+            <div id="confirmedTime">
+                6:00 PM
+            </div>
+
+            <div id="confirmedLocation">
+                Our Secret Destination
+            </div>
+
+        </div>
+
+        <p style="font-size: 14px; opacity: 0.5;">
+            P.S. I was hoping you'd say yes.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- MUSIC BUTTON -->
+
+<button
+    class="music-btn"
+    id="musicBtn"
+    onclick="toggleMusic()">
+    ♫
+</button>
+
+<!-- OPTIONAL BACKGROUND MUSIC -->
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+
+/* =====================================================
+   CONFIGURATION
+   CHANGE THESE VALUES
+===================================================== */
+
+const CONFIG = {
+
+    // Your girlfriend's name
+    name: "My Love",
+
+    // Your message
+    message:
+        "I've been thinking... life is better when I get to spend it with you. So I'd like to steal a little bit of your time for something simple: just you, me, good food, and a little adventure.",
+
+    // Date
+    date:
+        "September 18, 2026",
+
+    // Time
+    time:
+        "9:00 PM to 10:00 PM",
+
+    // Location
+    location:
+        "Our Secret Destination",
+
+    // Dress code
+    dress:
+        "Whatever makes you feel pretty."
+
+};
+
+
+/* =====================================================
+   INITIALIZE PAGE
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    document.getElementById("dateText").textContent =
+        CONFIG.date;
+
+    document.getElementById("timeText").textContent =
+        CONFIG.time;
+
+    document.getElementById("locationText").textContent =
+        CONFIG.location;
+
+    document.getElementById("dressText").textContent =
+        CONFIG.dress;
+
+    document.getElementById("confirmedDate").textContent =
+        CONFIG.date;
+
+    document.getElementById("confirmedTime").textContent =
+        CONFIG.time;
+
+    document.getElementById("confirmedLocation").textContent =
+        CONFIG.location;
+
+});
+
+
+/* =====================================================
+   SCREEN CONTROL
+===================================================== */
+
+function showScreen(number) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    const selected =
+        document.getElementById("screen" + number);
+
+    selected.classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =====================================================
+   OPEN INVITATION
+===================================================== */
+
+function openInvitation() {
+
+    const envelope =
+        document.getElementById("envelope");
+
+    envelope.classList.add("open");
+
+    setTimeout(() => {
+
+        showScreen(2);
+
+        typeMessage();
+
+    }, 1200);
+
+}
+
+
+/* =====================================================
+   TYPEWRITER MESSAGE
+===================================================== */
+
+function typeMessage() {
+
+    const element =
+        document.getElementById("message");
+
+    element.innerHTML = "";
+
+    let index = 0;
+
+    function type() {
+
+        if (index < CONFIG.message.length) {
+
+            element.innerHTML +=
+                CONFIG.message.charAt(index);
+
+            index++;
+
+            setTimeout(type, 25);
+
+        }
+
+    }
+
+    type();
+
+}
+
+
+/* =====================================================
+   YES BUTTON
+===================================================== */
+
+function acceptDate() {
+
+    showScreen(5);
+
+    createHeartExplosion();
+
+}
+
+
+/* =====================================================
+   NO BUTTON
+===================================================== */
+
+let noAttempts = 0;
+
+function noClicked() {
+
+    noAttempts++;
+
+    const button =
+        document.getElementById("noBtn");
+
+    const messages = [
+
+        "Are you sure?",
+
+        "Think again 😭",
+
+        "That's not the button.",
+
+        "Nice try.",
+
+        "You really want to do this?",
+
+        "I'm choosing YES for you ❤️"
+
+    ];
+
+    if (noAttempts < messages.length) {
+
+        button.textContent =
+            messages[noAttempts];
+
+    }
+
+    if (noAttempts >= 3) {
+
+        moveNoButton();
+
+    }
+
+    if (noAttempts >= 6) {
+
+        acceptDate();
+
+    }
+
+}
+
+
+/* =====================================================
+   MOVE NO BUTTON
+===================================================== */
+
+function moveNoButton() {
+
+    const button =
+        document.getElementById("noBtn");
+
+    const maxX = 120;
+    const maxY = 80;
+
+    const x =
+        Math.random() * (maxX * 2) - maxX;
+
+    const y =
+        Math.random() * (maxY * 2) - maxY;
+
+    button.style.transform =
+        `translate(${x}px, ${y}px)`;
+
+}
+
+
+/* =====================================================
+   HEART PARTICLES
+===================================================== */
+
+function createHeart() {
+
+    const heart =
+        document.createElement("div");
+
+    heart.className =
+        "floating-heart";
+
+    const hearts = [
+        "♥",
+        "♡",
+        "❤",
+        "💕",
+        "✨"
+    ];
+
+    heart.textContent =
+        hearts[Math.floor(Math.random() * hearts.length)];
+
+    heart.style.left =
+        Math.random() * 100 + "vw";
+
+    heart.style.animationDuration =
+        (5 + Math.random() * 5) + "s";
+
+    heart.style.fontSize =
+        (12 + Math.random() * 22) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 10000);
+
+}
+
+
+/* =====================================================
+   HEART EXPLOSION
+===================================================== */
+
+function createHeartExplosion() {
+
+    for (let i = 0; i < 35; i++) {
+
+        setTimeout(() => {
+            createHeart();
+        }, i * 80);
+
+    }
+
+}
+
+
+/* =====================================================
+   BACKGROUND HEARTS
+===================================================== */
+
+setInterval(() => {
+
+    createHeart();
+
+}, 1800);
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+const music =
+    document.getElementById("music");
+
+let musicPlaying = false;
+
+
+function toggleMusic() {
+
+    if (!musicPlaying) {
+
+        music.play()
+            .then(() => {
+
+                musicPlaying = true;
+
+                document.getElementById("musicBtn")
+                    .textContent = "🔊";
+
+            })
+            .catch(() => {
+
+                alert(
+                    "Add a file named music.mp3 beside index.html first."
+                );
+
+            });
+
+    } else {
+
+        music.pause();
+
+        musicPlaying = false;
+
+        document.getElementById("musicBtn")
+            .textContent = "♫";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
